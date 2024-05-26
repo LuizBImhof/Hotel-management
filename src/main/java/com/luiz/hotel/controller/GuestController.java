@@ -49,7 +49,17 @@ public class GuestController {
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteGuestById(@PathVariable Long id) {
         this.guestService.deleteGuestById(id);
-        return ResponseEntity.ok().body("Deleted patient with id : " + id + " successfully");
+        return ResponseEntity.ok().body("Deleted guest with id : " + id + " successfully");
+    }
+
+    @GetMapping("/guestsInHotel")
+    public ResponseEntity<List<GuestDto>> getGuestsCurrentlyInHotel(){
+        return ResponseEntity.ok().body(this.guestService.getGuestsCurrentlyInHotel());
+    }
+
+    @GetMapping("/guestsWithReservationAndNotCheckedIn")
+    public ResponseEntity<List<GuestDto>> getGuestsWithReservationAndNotCheckedIn(){
+        return ResponseEntity.ok().body(this.guestService.getGuestsWithReservationAndNotCheckedIn());
     }
 
 }

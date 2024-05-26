@@ -35,7 +35,7 @@ public class ReservationService {
         reservation.setGuest(guest.get());
         } else {
             log.info("User not found");
-            return null;
+            return null;//todo send exception
         }
 
 
