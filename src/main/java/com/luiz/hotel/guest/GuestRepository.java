@@ -12,4 +12,5 @@ public interface GuestRepository extends JpaRepository<GuestEntity, Long> {
 
     Optional<GuestEntity> findGuestByName(String name);
 
+    Optional<GuestEntity> findGuestById(Long id);
 }

@@ -23,43 +23,22 @@ public class GuestController {
         return ResponseEntity.ok().body(guestService.getAllGuests());
     }
 
-    @GetMapping(value = "/",
-            produces = MediaType.APPLICATION_JSON_VALUE )
+    @GetMapping(value = "/filter",
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<GuestDto> getGuestByParameter(
             @RequestParam(
                     value = "document",
-                    required = false) final String document
-    ) {
-        final Optional<GuestDto> guest = this.guestService.getGuestByDocument(document);
-        return guest.map(guestDto -> ResponseEntity.ok().body(guestDto)).orElseGet(() -> new ResponseEntity<>(HttpStatus.NO_CONTENT));
-    }
-
-    @GetMapping(value = "/",
-            produces = MediaType.APPLICATION_JSON_VALUE
-    )
-    public ResponseEntity<GuestDto> getGuestByPhone(
-
+                    required = false) final String document,
             @RequestParam(
                     value = "phone",
-                    required = false) final String phone
-    ) {
-        final Optional<GuestDto> guest = this.guestService.getGuestByPhone(phone);
-        return guest.map(guestDto -> ResponseEntity.ok().body(guestDto)).orElseGet(() -> new ResponseEntity<>(HttpStatus.NO_CONTENT));
-    }
-
-    @GetMapping(value = "/",
-            produces = MediaType.APPLICATION_JSON_VALUE
-    )
-    public ResponseEntity<GuestDto> getGuestByName(
-
+                    required = false) final String phone,
             @RequestParam(
                     value = "name",
                     required = false) final String name
     ) {
-        final Optional<GuestDto> guest = this.guestService.getGuestByName(name);
+        final Optional<GuestDto> guest = this.guestService.getGuestByParameter(document, phone, name);
         return guest.map(guestDto -> ResponseEntity.ok().body(guestDto)).orElseGet(() -> new ResponseEntity<>(HttpStatus.NO_CONTENT));
     }
-
 
     @PostMapping("/")
     public ResponseEntity<GuestDto> saveGuest(@RequestBody GuestDto guest) {

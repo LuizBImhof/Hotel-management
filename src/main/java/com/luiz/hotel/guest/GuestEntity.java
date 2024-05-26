@@ -1,14 +1,13 @@
 package com.luiz.hotel.guest;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @NoArgsConstructor
-@AllArgsConstructor
 @Entity
-@Data
+@Getter
+@Setter
+@ToString
 @Table(name = "guest")
 public class GuestEntity {
 
@@ -17,8 +16,10 @@ public class GuestEntity {
 
     private String name;
 
+    @Column(unique=true)
     private String document;
 
+    @Column(unique=true)
     private String phone;
 
     public GuestEntity (GuestDto data){

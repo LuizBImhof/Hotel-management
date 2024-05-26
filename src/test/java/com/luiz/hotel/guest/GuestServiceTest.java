@@ -23,7 +23,7 @@ class GuestServiceTest {
 
     @Test
     void getAllGuests() {
-        
+
     }
 
     @Test

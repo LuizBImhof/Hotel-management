@@ -1,5 +1,6 @@
 package com.luiz.hotel.guest;
 
+import ch.qos.logback.core.util.StringUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -13,7 +14,7 @@ import java.util.Optional;
 public class GuestService {
     private final GuestRepository guestRepository;
 
-    public List<GuestDto> getAllGuests(){
+    public List<GuestDto> getAllGuests() {
         log.info("Get all guests");
         final List<GuestEntity> result = guestRepository.findAll();
         return result.stream().map(GuestDto::new).toList();
@@ -42,5 +43,22 @@ public class GuestService {
 
     public Optional<GuestDto> getGuestByName(String name) {
         return guestRepository.findGuestByName(name).map(GuestDto::new);
+    }
+
+    public Optional<GuestDto> getGuestByParameter(String document, String phone, String name) {
+        if (!StringUtil.isNullOrEmpty(document)) {
+            return this.getGuestByDocument(document);
+        }
+        if (!StringUtil.isNullOrEmpty(phone)) {
+            return this.getGuestByPhone(phone);
+        }
+        if (!StringUtil.isNullOrEmpty(name)) {
+            return this.getGuestByName(name);
+        }
+        return Optional.empty();
+    }
+
+    public Optional<GuestEntity> getGuestById(Long id) {
+        return guestRepository.findGuestById(id);
     }
 }
