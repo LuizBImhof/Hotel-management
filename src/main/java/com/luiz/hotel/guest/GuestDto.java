@@ -1,7 +1,16 @@
 package com.luiz.hotel.guest;
 
-public record GuestDto(String name, String document, String phone) {
+import com.luiz.hotel.reservation.ReservationDto;
+
+import java.util.List;
+
+public record GuestDto(Long id, String name, String document, String phone, List<ReservationDto> reservations) {
     public GuestDto(GuestEntity guest){
-        this(guest.getName(), guest.getDocument(), guest.getPhone());
+        this(guest.getId(),
+                guest.getName(),
+                guest.getDocument(),
+                guest.getPhone(),
+                guest.getReservations().stream().map(ReservationDto::new).toList());
     }
+
 }

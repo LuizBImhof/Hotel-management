@@ -12,27 +12,36 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Entity
-@ToString
+@ToString(onlyExplicitlyIncluded = true)
 @Table(name = "reservation")
 public class ReservationEntity {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @ToString.Include
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(nullable = false)
     private Long id;
 
+    @ToString.Include
     private LocalDate start_date;
 
+    @ToString.Include
     private LocalDate end_date;
 
+    @ToString.Include
     private LocalDateTime check_in;
 
+    @ToString.Include
     private LocalDateTime check_out;
 
+    @ToString.Include
+    @Column(nullable = false)
     private boolean vehicle;
 
+    @ToString.Include
     @Column(columnDefinition = "Integer default 0")
     private Integer price = 0;
 
     @ManyToOne(optional = false)
-    @JoinColumn (name = "guest_id")
     private GuestEntity guest;
 
     public ReservationEntity (ReservationDto data){

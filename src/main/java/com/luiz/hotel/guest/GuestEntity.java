@@ -1,7 +1,10 @@
 package com.luiz.hotel.guest;
 
+import com.luiz.hotel.reservation.ReservationEntity;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.List;
 
 @NoArgsConstructor
 @Entity
@@ -22,7 +25,11 @@ public class GuestEntity {
     @Column(unique=true)
     private String phone;
 
+    @OneToMany(mappedBy = "guest")
+    private List<ReservationEntity> reservations;
+
     public GuestEntity (GuestDto data){
+        this.id = data.id();
         this.name = data.name();
         this.document = data.document();
         this.phone = data.phone();
