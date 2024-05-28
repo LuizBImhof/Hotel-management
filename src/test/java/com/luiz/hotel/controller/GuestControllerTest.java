@@ -16,7 +16,6 @@ import org.springframework.http.ResponseEntity;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -32,7 +31,6 @@ public class GuestControllerTest{
     @DisplayName("Should save guest correctly")
     public void testSaveGuest() {
         GuestDto guestDto = new GuestDto(1L, "a", "2", "2", Collections.emptyList());
-        GuestEntity guestEntity = new GuestEntity(guestDto);
 
         when(guestService.saveGuest(any(GuestDto.class))).thenReturn(guestDto);
 
