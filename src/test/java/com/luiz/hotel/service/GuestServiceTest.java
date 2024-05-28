@@ -1,4 +1,4 @@
-package com.luiz.hotel.guest;
+package com.luiz.hotel.service;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;

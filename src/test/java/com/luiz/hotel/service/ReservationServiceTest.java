@@ -1,4 +1,4 @@
-package com.luiz.hotel.reservation;
+package com.luiz.hotel.service;
 
 import com.luiz.hotel.dtos.*;
 import com.luiz.hotel.entities.*;
