@@ -5,7 +5,6 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -32,6 +31,7 @@ public class GuestEntity {
     private List<ReservationEntity> reservations;
 
     public GuestEntity (GuestDto data){
+        this.id = data.id();
         this.name = data.name();
         this.document = data.document();
         this.phone = data.phone();

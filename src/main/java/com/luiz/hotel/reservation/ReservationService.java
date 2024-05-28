@@ -1,30 +1,31 @@
 package com.luiz.hotel.reservation;
 
-import com.luiz.hotel.guest.GuestDto;
-import com.luiz.hotel.guest.GuestEntity;
-import com.luiz.hotel.guest.GuestService;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import com.luiz.hotel.guest.*;
+import com.luiz.hotel.utils.*;
+import lombok.*;
+import lombok.extern.slf4j.*;
+import org.springframework.beans.factory.annotation.*;
+import org.springframework.stereotype.*;
 
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-
-import java.util.List;
-import java.util.Optional;
+import java.time.*;
+import java.time.temporal.*;
+import java.util.*;
 
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class ReservationService {
+
     @Autowired
     private final ReservationRepository reservationRepository;
 
     @Autowired
     private final GuestService guestService;
+
+    @Autowired
+    private final Clock clock;
+
 
     public List<ReservationDto> getAllReservations() {
         log.info("Get all reservations");
@@ -54,11 +55,12 @@ public class ReservationService {
     }
 
     public Optional<ReservationDto> doCheckIn(Long id) throws Exception {
-        checkIfAvailableForCheckIn();
+        LocalDateTime checkIn = LocalDateTime.now(clock).truncatedTo(ChronoUnit.MINUTES);
+        checkIfAvailableForCheckIn(checkIn);
         final Optional<ReservationEntity> reservation = this.reservationRepository.findById(id);
         if (reservation.isPresent()) {
             if (reservation.get().getCheck_in() == null) {
-                reservation.get().setCheck_in(LocalDateTime.now());
+                reservation.get().setCheck_in(checkIn);
                 this.reservationRepository.save(reservation.get());
             } else {
                 log.info("check in já efetuado");
@@ -71,14 +73,14 @@ public class ReservationService {
         return reservation.map(ReservationDto::new);
     }
 
-    private static void checkIfAvailableForCheckIn() throws Exception {
-        if (LocalDateTime.now().getHour() <= 14) {
+    private static void checkIfAvailableForCheckIn(LocalDateTime checkIn) throws Exception {
+        if (checkIn.getHour() < 14) {
             log.info("check in não permitido (antes das 14h)");
             throw new Exception("Não é permitido check-in antes das 14h");
         }
     }
 
-    public Optional<CheckOutResponseDto> doCheckOut(Long id) {
+    public Optional<CheckOutResponseDto> doCheckOut(Long id) throws Exception {
         int numberOfWeekDays = 0;
         int numberOfWeekEndDays = 0;
         int price = 0;
@@ -89,33 +91,37 @@ public class ReservationService {
 
         if (reservation.isPresent()) {
             LocalDateTime checkIn = reservation.get().getCheck_in();
-            LocalDateTime checkOut = LocalDateTime.now();
-            for (LocalDate date = LocalDate.from(checkIn); date.isBefore(LocalDate.from(checkOut)) || date.isEqual(LocalDate.from(checkOut)); date = date.plusDays(1)) {
-                if (date.getDayOfWeek().ordinal() == 6 || date.getDayOfWeek().ordinal() == 7) {
+            if (checkIn == null) {
+                throw new Exception("Reservation is not checked in");
+            }
+            LocalDateTime checkOut = LocalDateTime.now(clock).truncatedTo(ChronoUnit.MINUTES);
+            reservation.get().setCheck_out(checkOut);
+
+            for (LocalDate date = LocalDate.from(checkIn); date.isBefore(LocalDate.from(checkOut)); date = date.plusDays(1)) {
+                if (date.getDayOfWeek().ordinal() == 5 || date.getDayOfWeek().ordinal() == 6) {
                     numberOfWeekEndDays++;
                 } else {
                     numberOfWeekDays++;
                 }
             }
 
-            price = (numberOfWeekDays * 120) + (numberOfWeekEndDays * 180);
+            price = (numberOfWeekDays * Constants.WEEKDAYPRICE) + (numberOfWeekEndDays * Constants.WEEKENDPRICE);
             if (reservation.get().isVehicle()) {
-                vehiclePrice = (numberOfWeekDays * 15) + (numberOfWeekEndDays * 20);
+                vehiclePrice = (numberOfWeekDays * Constants.VEHICLEWEEKPRICE) + (numberOfWeekEndDays * Constants.VEHICLEWEEKENDPRICE);
                 price = price + vehiclePrice;
             }
             if (checkOut.getHour() >= 12) {
-                if (checkOut.getDayOfWeek().ordinal() == 6 || checkOut.getDayOfWeek().ordinal() == 7) {
-                    lateCheckoutPrice = 120 / 2;
+                if (checkOut.getDayOfWeek().ordinal() == 0 || checkOut.getDayOfWeek().ordinal() == 6) {
+                    lateCheckoutPrice = Constants.WEEKENDPRICE / 2;
                 } else {
-                    lateCheckoutPrice = 180 / 2;
+                    lateCheckoutPrice = Constants.WEEKDAYPRICE / 2;
                 }
                 price = price + lateCheckoutPrice;
             }
 
-            reservation.get().setCheck_out(checkOut);
 
             GuestDto guest = new GuestDto(reservation.get().getGuest());
-            CheckOutResponseDto responseDto = new CheckOutResponseDto(price, numberOfWeekDays, numberOfWeekEndDays, vehiclePrice, lateCheckoutPrice, guest);
+            CheckOutResponseDto responseDto = new CheckOutResponseDto(reservation.get().getCheck_in(), reservation.get().getCheck_out(), price, numberOfWeekDays, numberOfWeekEndDays, vehiclePrice, lateCheckoutPrice, guest);
 
             return Optional.of(responseDto);
         }

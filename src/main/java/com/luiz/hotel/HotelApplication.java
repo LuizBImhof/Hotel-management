@@ -2,6 +2,9 @@ package com.luiz.hotel;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+
+import java.time.Clock;
 
 @SpringBootApplication
 public class HotelApplication {
@@ -10,4 +13,8 @@ public class HotelApplication {
 		SpringApplication.run(HotelApplication.class, args);
 	}
 
+	@Bean
+	public Clock clock () {
+		return Clock.systemDefaultZone();
+	}
 }
