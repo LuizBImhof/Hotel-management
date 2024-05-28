@@ -1,13 +1,9 @@
 package com.luiz.hotel.controller;
 
-import com.luiz.hotel.reservation.CheckOutResponseDto;
-import com.luiz.hotel.reservation.ReservationDto;
-import com.luiz.hotel.reservation.ReservationEntity;
-import com.luiz.hotel.reservation.ReservationService;
-import jakarta.persistence.EntityNotFoundException;
+import com.luiz.hotel.dtos.CheckOutResponseDto;
+import com.luiz.hotel.dtos.ReservationDto;
+import com.luiz.hotel.services.ReservationService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

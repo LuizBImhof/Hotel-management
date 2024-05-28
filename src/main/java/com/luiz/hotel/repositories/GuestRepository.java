@@ -1,5 +1,6 @@
-package com.luiz.hotel.guest;
+package com.luiz.hotel.repositories;
 
+import com.luiz.hotel.entities.*;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

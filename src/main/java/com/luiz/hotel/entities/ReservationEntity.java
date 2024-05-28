@@ -1,6 +1,6 @@
-package com.luiz.hotel.reservation;
+package com.luiz.hotel.entities;
 
-import com.luiz.hotel.guest.GuestEntity;
+import com.luiz.hotel.dtos.*;
 import jakarta.persistence.*;
 import lombok.*;
 

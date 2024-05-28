@@ -1,6 +1,9 @@
-package com.luiz.hotel.guest;
+package com.luiz.hotel.services;
 
 import ch.qos.logback.core.util.StringUtil;
+import com.luiz.hotel.dtos.*;
+import com.luiz.hotel.entities.*;
+import com.luiz.hotel.repositories.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

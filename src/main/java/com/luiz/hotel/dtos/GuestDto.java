@@ -1,6 +1,6 @@
-package com.luiz.hotel.guest;
+package com.luiz.hotel.dtos;
 
-import com.luiz.hotel.reservation.ReservationDto;
+import com.luiz.hotel.entities.*;
 
 import java.util.Collections;
 import java.util.List;

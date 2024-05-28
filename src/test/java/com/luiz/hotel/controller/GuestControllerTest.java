@@ -1,8 +1,8 @@
 package com.luiz.hotel.controller;
 
-import com.luiz.hotel.guest.GuestDto;
-import com.luiz.hotel.guest.GuestEntity;
-import com.luiz.hotel.guest.GuestService;
+import com.luiz.hotel.dtos.GuestDto;
+import com.luiz.hotel.entities.GuestEntity;
+import com.luiz.hotel.services.GuestService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

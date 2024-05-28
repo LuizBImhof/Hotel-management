@@ -3,6 +3,10 @@ package com.luiz.hotel.guest;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+import com.luiz.hotel.dtos.*;
+import com.luiz.hotel.entities.*;
+import com.luiz.hotel.repositories.*;
+import com.luiz.hotel.services.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

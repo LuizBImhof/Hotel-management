@@ -1,7 +1,7 @@
 package com.luiz.hotel.controller;
 
-import com.luiz.hotel.guest.GuestDto;
-import com.luiz.hotel.guest.GuestService;
+import com.luiz.hotel.dtos.GuestDto;
+import com.luiz.hotel.services.GuestService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

@@ -1,4 +1,6 @@
-package com.luiz.hotel.reservation;
+package com.luiz.hotel.dtos;
+
+import com.luiz.hotel.entities.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

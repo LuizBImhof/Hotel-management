@@ -1,9 +1,9 @@
 package com.luiz.hotel.controller;
 
 
-import com.luiz.hotel.reservation.CheckOutResponseDto;
-import com.luiz.hotel.reservation.ReservationDto;
-import com.luiz.hotel.reservation.ReservationService;
+import com.luiz.hotel.dtos.CheckOutResponseDto;
+import com.luiz.hotel.dtos.ReservationDto;
+import com.luiz.hotel.services.ReservationService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

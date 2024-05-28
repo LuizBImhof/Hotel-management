@@ -1,6 +1,9 @@
 package com.luiz.hotel.reservation;
 
-import com.luiz.hotel.guest.*;
+import com.luiz.hotel.dtos.*;
+import com.luiz.hotel.entities.*;
+import com.luiz.hotel.repositories.*;
+import com.luiz.hotel.services.*;
 import com.luiz.hotel.utils.*;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.*;
