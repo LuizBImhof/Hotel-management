@@ -58,10 +58,6 @@ public class GuestService {
         return Optional.empty();
     }
 
-    public Optional<GuestEntity> getGuestById(Long id) {
-        return guestRepository.findGuestById(id);
-    }
-
     public List<GuestDto> getGuestsCurrentlyInHotel() {
         return guestRepository.findGuestsInHotel().stream().map(GuestDto::new).toList();
     }
