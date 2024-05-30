@@ -83,12 +83,6 @@ public class ReservationService {
     }
 
     public Optional<CheckOutResponseDto> doCheckOut(Long id) throws Exception {
-        int numberOfWeekDays = 0;
-        int numberOfWeekEndDays = 0;
-        int price = 0;
-        int vehiclePrice = 0;
-        int lateCheckoutPrice = 0;
-
         final Optional<ReservationEntity> reservation = this.reservationRepository.findById(id);
 
         if (reservation.isPresent()) {
@@ -99,35 +93,46 @@ public class ReservationService {
             LocalDateTime checkOut = LocalDateTime.now(clock).truncatedTo(ChronoUnit.MINUTES);
             reservation.get().setCheck_out(checkOut);
 
-            for (LocalDate date = LocalDate.from(checkIn); date.isBefore(LocalDate.from(checkOut)); date = date.plusDays(1)) {
-                if (date.getDayOfWeek().ordinal() == 5 || date.getDayOfWeek().ordinal() == 6) {
-                    numberOfWeekEndDays++;
-                } else {
-                    numberOfWeekDays++;
-                }
-            }
-
-            price = (numberOfWeekDays * Constants.WEEKDAYPRICE) + (numberOfWeekEndDays * Constants.WEEKENDPRICE);
-            if (reservation.get().isVehicle()) {
-                vehiclePrice = (numberOfWeekDays * Constants.VEHICLEWEEKPRICE) + (numberOfWeekEndDays * Constants.VEHICLEWEEKENDPRICE);
-                price = price + vehiclePrice;
-            }
-            if (checkOut.getHour() >= 12) {
-                if (checkOut.getDayOfWeek().ordinal() == 0 || checkOut.getDayOfWeek().ordinal() == 6) {
-                    lateCheckoutPrice = Constants.WEEKENDPRICE / 2;
-                } else {
-                    lateCheckoutPrice = Constants.WEEKDAYPRICE / 2;
-                }
-                price = price + lateCheckoutPrice;
-            }
-
+            int[] dayCounts = countDays(checkIn, checkOut);
+            int price = calculatePrice(reservation.get(), dayCounts);
 
             GuestDto guest = new GuestDto(reservation.get().getGuest());
-            CheckOutResponseDto responseDto = new CheckOutResponseDto(reservation.get().getCheck_in(), reservation.get().getCheck_out(), price, numberOfWeekDays, numberOfWeekEndDays, vehiclePrice, lateCheckoutPrice, guest);
+            CheckOutResponseDto responseDto = new CheckOutResponseDto(checkIn, checkOut, price, dayCounts[0], dayCounts[1], dayCounts[2], dayCounts[3], guest);
 
             return Optional.of(responseDto);
         }
 
         return Optional.empty();
+    }
+
+    private int[] countDays(LocalDateTime checkIn, LocalDateTime checkOut) {
+        int numberOfWeekDays = 0;
+        int numberOfWeekEndDays = 0;
+        int vehiclePrice = 0;
+        int lateCheckoutPrice = 0;
+
+        for (LocalDate date = LocalDate.from(checkIn); date.isBefore(LocalDate.from(checkOut)); date = date.plusDays(1)) {
+            if (date.getDayOfWeek().ordinal() == 5 || date.getDayOfWeek().ordinal() == 6) {
+                numberOfWeekEndDays++;
+            } else {
+                numberOfWeekDays++;
+            }
+        }
+
+        return new int[]{numberOfWeekDays, numberOfWeekEndDays, vehiclePrice, lateCheckoutPrice};
+    }
+
+    private int calculatePrice(ReservationEntity reservation, int[] dayCounts) {
+        int price = (dayCounts[0] * Constants.WEEKDAYPRICE) + (dayCounts[1] * Constants.WEEKENDPRICE);
+        if (reservation.isVehicle()) {
+            int vehiclePrice = (dayCounts[0] * Constants.VEHICLEWEEKPRICE) + (dayCounts[1] * Constants.VEHICLEWEEKENDPRICE);
+            price += vehiclePrice;
+        }
+        if (LocalDateTime.now(clock).getHour() >= 12) {
+            int lateCheckoutPrice = (LocalDateTime.now(clock).getDayOfWeek().ordinal() == 0 || LocalDateTime.now(clock).getDayOfWeek().ordinal() == 6) ? Constants.WEEKENDPRICE / 2 : Constants.WEEKDAYPRICE / 2;
+            price += lateCheckoutPrice;
+        }
+
+        return price;
     }
 }
