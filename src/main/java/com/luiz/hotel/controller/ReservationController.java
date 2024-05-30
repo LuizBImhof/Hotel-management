@@ -14,6 +14,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("reservation")
 @RequiredArgsConstructor
+@CrossOrigin
 public class ReservationController {
     private final ReservationService reservationService;
 
